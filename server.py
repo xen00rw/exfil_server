@@ -5,10 +5,6 @@ import time
 import base64
 import hashlib
 
-def log(info:str):
-    with open('dump.log','a') as f:
-        f.write(info+'\n')
-
 def hash():
     now = datetime.now()
     hash = hashlib.md5(str(now).encode('utf-8'))
